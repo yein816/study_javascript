@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/json.css">
+
+    <title>The movie</title>
+</head>
+
+<body>
+    <h1>MOVIE</h1>
+    <div class="listInfo"></div>
+   
+    
+</body>
+<!-- <script src="../config.js"></script> -->
+<script>
+    const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w300';  //모든 이미지 주소
+    const API_KEY = "d6991df45decb8b69479eb6f5d06becc" ;   //할당받은 api 키 값
+    const movie_url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=ko-KR&page=1`; //현재상영작 주소 url이 있어야 영화 리스트를 받을수 있다.
+    const movie_id = `https://api.themoviedb.org/3/movie/{movie_id}?api_key=${API_KEY}&language=ko-KR`; //각 영화의 상세내용을 받을 수 있는 주소
+   
+
+   axios.get(movie_url)  //url를 불러오면
+    
+  // 응답(성공)
+//   .then(function (res) {
+//     console.log(res.data);
+//     console.log(res.data.results);
+//   })
+  
+   .then(function (res) {  //movie_url 안에 있는 배열을 불러온다.
+     const data_list = res.data.results   //내가 받은 현재상영작들의 리스트 배열을 변수를 만들어서 넣는다.
+     console.log(data_list)  // data_list에 값이 들어왔는지 확인
+      for(var i=0; i< data_list.length; i++)  // i를 선언해서 i가 증가할때마다 data_list(배열)의 갯수를 센다. 
+      {
+        const movies_id = data_list[i].id //리스트 중에서 아이디 값을 가져와서 movie_id에 넣어준다. 아이디 값을 받아서 각 영화 상세내용을 얻기 위해서
+        
+        $('.listInfo').append("<div img-id="+ movies_id +"><img src="+IMAGE_BASE_URL + data_list[i].poster_path+"><p>"+data_list[i].title+"</p></div>");  //영화리스트 페이지
+        //div에 yein-id에 각 영화 하나씩 있는 id 값을 넣어준다, movie_id를 추가하는 이유는 id값을 넣어줄려면 movie_id에 있기 때문 
+        //, 이미지는 모든 이미지를 넣은 변수를 불러오고 배열안에 포스터 와 제목을 불러온다.
+      }
+     
+     })
+  // 응답(실패)
+  .catch(function (error) {
+    console.log(error);
+  })
+  // 응답(항상 실행)
+  .then(function () {
+    // ...
+  });
+
+  
+  $(document).on('click','.listInfo >div',function(){
+    const movie_changeID = $(this).attr("img-id");  //이미지를 클릭할 때마다 아이디 값이 변경되는것을 변수 movie_changeID에 넣어준다. (변경되는 아이디에 따라 이미지와 글도 달라짐)
+    // console.log(movie_changeID)
+    window.open('movie_content(axios).html?movie_id=' + movie_changeID +'',"_blank"); //그러면 주소 뒤에 아이디 값이 붙어지면서 클릭한 이미지의 각 해당하는 값을 불러옴 
+
+    
+  })
+
+</script>
+
+</html>

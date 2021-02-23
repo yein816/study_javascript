@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+
+    <!-- 브라우저 호환성 지원 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+
+    <!-- 모바일 시 넓이 따라가도록 지원 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    
+    <link rel="stylesheet" type="text/css" href="/css/todo.css">
+
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <title>to do list</title>
+    </head>
+    <body>
+        <div class="wrap">
+            <div class="list_box">
+                <h1>To-Do-List</h1>
+                <p>할일</p>
+                <input type="text" class="text_content" value="" placeholder="ADD-WORK">
+                <button class="btn_add">추가</button> <!-- 입력 -->
+                <div class="list_box2"></div> <!-- 출력되는 공간 -->
+            </div>
+        </div>
+    </body>
+
+    <script>
+        
+        const todoUrl= 'http://192.168.0.84:3000/todo-list' ; // api주소 (todo)
+
+        const getTodoList = function(){  //데이터를 계속 가져와야하기에 변수에 넣어서 소스 반복으로 쓰는 횟수 줄임.
+            axios.get(todoUrl)   // api 주소를 가져와라 
+            .then(function (res) { 
+                //console.log(res);
+                const data_list = res.data.body  //내가 필요한 데이터를 변수에 넣어라 
+                //console.log(data_list)
+                $('.todo_lists').remove(); //누적된값을 비워라
+                
+                for(var i=0; i< data_list.length; i++)  // i를 선언해서 i가 증가할때마다 data_list(배열)의 갯수를 센다. 
+                {
+                    const todo_content = data_list[i].content 
+                    const todo_id = data_list[i].id
+                    //console.log(todo_id)
+                    //console.log(todo_content)
+                    const btns =
+                    '<input class="todo_text" value="'+todo_content+'" style="display:none"><button type="button" class="btnModify">수정</button><button type="button" class="btnDelete">삭제</button><button type="button" class="btnSuccess" style="display:none">확인</button><button type="button" class="btnCancel" style="display:none">취소</button>'; 
+                    $('.list_box2').append('<div class="todo_lists" data-id="'+todo_id+'">'+'<p class="todo_work">'+ todo_content +'</p>'+btns+'</div>');
+                }
+            })
+        }
+        getTodoList();
+        //추가 get
+            $(document).on('click','.btn_add',function(){
+               
+                const contents = document.querySelector(".text_content").value
+                $('.text_content').push(contents)
+                document.querySelector(".text_content").value="";
+                //console.log(contents)
+                
+                const todo_data = {  //추가할 json 객체 생성
+                content:contents,
+                status:1,
+                importance:30000,
+                }
+
+                axios.post(todoUrl,todo_data)  
+                    
+                .then((todo_data) => {
+                    getTodoList();
+                })
+               
+            })
+            
+           
+
+            // 삭제 delete
+            $(document).on('click','.btnDelete',function(){
+                var todo_id = $(this).parent('div').attr('data-id');
+                
+                //console.log(todo_id);
+                
+                axios.delete(todoUrl+'/'+todo_id)
+                .then((todo_data) => {
+                    //location.reload();
+                    //console.log(todo_data);
+                    getTodoList();
+                })
+            })
+                          
+            //수정 put
+            $(document).on('click','.btnModify',function(){
+
+                $(this).siblings('.todo_text').css('display','block');
+                $(this).siblings('.todo_work').css('display','none'); // 원래 있던 p는 없애주고
+                $(this).siblings('.btnDelete').css("display", "none"); // 삭제버튼 없애고
+                $(this).css('display','none'); //수정버튼 없애고
+                
+                $(this).siblings('.btnSuccess').css("display", "block"); //확인버튼 나타나게 하고
+                $(this).siblings('.btnCancel').css("display", "block"); //취소버튼 나타나게 하고
+
+                // axios.put(todoUrl+'/'+todo_id)
+                
+                // .then((todo_data) => {
+                  //getTodoList();
+                // })
+            })
+            
+            //확인
+            $(document).on('click','.btnSuccess',function(){
+                const re_write = $(this).parents("div").children("input").val(); //input 값을 변수에 넣어두고
+                
+                $(this).siblings('.todo_work').text(re_write) // 변수를 p에 문자로 넣어주고
+                $(this).siblings('.todo_work').css('display','block');
+                
+                $(this).siblings('input').css('display','none'); //input 없애고
+                $(this).parents('.todo_lists').children('.btnDelete').css('display','block'); //삭제버튼 나오게
+                $(this).siblings(".btnModify").css('display','block'); //수정버튼 나오게
+                
+                $(this).css('display','none'); //확인버튼 없애고
+                $(this).siblings(".btnCancel").css('display','none'); //취소버튼 없애고
+           
+            })
+            
+            //취소
+            $(document).on('click','.btnCancel',function(){
+                $(this).siblings("p").css("display", "block"); 
+                $(this).siblings("input").css("display", "none");
+
+                $(this).css('display','none');
+                $(this).siblings(".btnSuccess").css('display','none');
+
+                $(this).siblings(".btnModify").css('display','block');
+                $(this).siblings(".btnDelete").css('display','block');
+            })
+            
+            
+    </script>

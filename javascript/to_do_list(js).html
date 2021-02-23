@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- 브라우저 호환성 지원 -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+
+  <!-- 모바일 시 넓이 따라가도록 지원 -->
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+  />
+
+  <link rel="stylesheet" type="text/css" href="/css/to_list.css" />
+
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+  <title>to do list</title>
+</head>
+<body>
+  <div class="wrap">
+    <div class="list_box">
+      <h1>To do List</h1>
+      <div class="write_box">
+        <input
+          type="text"
+          class="text_content"
+          placeholder="할일을 입력하세요"
+        />
+        <button type="button" id="btnAdd">추가</button>
+      </div>
+      <table class="list-table">
+        <tbody id="listBody">
+          <!-- <tr>
+                     <td id="list_text"></td> -->
+          <!-- <button type="button" id="btnModify">수정</button>
+                    <button type="button" id="btnOk">완료</button>
+                </tr>  -->
+        </tbody>
+      </table>
+      <button id="btnDelete">전체삭제</button>
+    </div>
+  </div>
+
+  <script>
+    
+
+    document.getElementById("btnAdd").addEventListener("click", addList); // 추가 (이벤트 등록)
+    //document.getElementById('btnModify').addEventListener('click', addModify); // 수정
+    //document.getElementById('btnOk').addEventListener('click', modifyOk); // 완료
+    document.getElementById("btnDelete").addEventListener("click", list_Delete); //전체 삭제
+
+    function addList() { //추가
+      
+      const contents = document.querySelector(".text_content"); //클래스명이 text_content(input)을 contents 변수에 넣어준다.
+      if (!contents.value) {
+        // contents 값이 없다면
+        alert("내용을 입력해주세요.");
+        contents.focus();
+        return false;
+      }
+      const tr_list = document.createElement("tr"); //괄호안에 요소를 새로 생성한것을 tr_list에 넣어준다.
+      const td_list = document.createElement("td"); //괄호안에 요소를 새로 생성한것을 td_list에 추가
+      // const edit = document.createElement("input");
+      const twobtn =
+        '<button type="button" id="btnSuccess">완료</button><button type="button" id="btnModify">수정</button>'; //수정,완료 버튼을 변수에 넣어둔다.
+
+      td_list.innerHTML = '<p id="value">▶' + contents.value + "</p>" + "<input value="+ contents.value + " id='edit' style='display: none' type='text' />" +  twobtn; //td_list에 있는 input 값을 html 문서 요소에 가져오고 innerHTML을 이용해서 바꾼다. 두 버튼은 항상 같이 나오게
+      tr_list.appendChild(td_list); //tr element의 자식으로 td_list를 등록
+
+      document.getElementById("listBody").appendChild(tr_list); //보여질 리스트바디에 내가 작성한 것을 담은 tr_list를 등록
+      contents.value = ""; // 추가를 하면 작성한 input 값을 없앤다.
+      contents.focus(); //추가를 누른뒤 포커스를 input 박스에 되도록
+    }
+
+    $(document).on("click", "#btnSuccess", function () { //완료   //input을 다시 텍스트로
+      
+      const todo_success = $(this).parents("td").children("input").val();  // jquery는 .val , javascript는 .value
+      $(this).siblings('p').css('display','none');
+      $(this).siblings('#btnModify').css('display','none');
+      $(this).css('display','none');     
+    });
+
+    $(document).on("click", "#btnModify", function () {  //수정
+       //괄호안에 요소를 새로 생성한것을 input에 추가, input에 내가 작성한 값이 넣어져야하고
+      //listBody 안 tr_list가 input으로 변환   contents.value
+     
+      $(this).siblings("p").css("display", "none");
+      $(this).siblings("input").css("display", "block");
+      $(this).css('display','none');
+      $(this).siblings('#btnSuccess').css('display','none');
+      const twobtn2 = '<button type="button" id="btnCancel">취소</button><button type="button" id="btnOk">확인</button>';
+      $(this).parents('td').append(twobtn2)
+    });
+
+    $(document).on("click", "#btnCancel", function () {  //취소
+      $(this).siblings("p").css("display", "block");
+      $(this).siblings("input").css("display", "none");
+    })
+   
+
+    $(document).on("click", "#btnOk", function () {  //확인
+      const re_write = $(this).parents("td").children("input").val();
+      //document.getElementsByTagName('p').innerText = re_write;
+      
+      console.log(re_write)
+      
+      $(this).siblings("p").css("display", "block").text(re_write);  //.append('<p>'+변수명+'</p>')
+      $(this).siblings("input").css("display", "none");
+      $(this).css('display','none');
+      $(this).siblings('#btnCancel').css('display','none');
+      $(this).siblings('#btnModify').css('display','block');
+      $(this).siblings('#btnSuccess').css('display','block');
+    })
+
+    function list_Delete() { //전체삭제
+      document.getElementById("listBody").innerHTML='';
+    }
+
+    
+  </script>
+</body>

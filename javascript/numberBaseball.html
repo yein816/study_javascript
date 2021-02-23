@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" type="text/css" href="">
+
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+    <title>숫자야구</title>
+    </head>
+    <body>
+        <div class="wrap">
+            <div>
+               <h1>숫자야구</h1>
+               <div class="random">
+                   <div class="question">
+                       <p class="question_text">3개의 숫자를 입력하세요</p></div>
+                   <form>
+                        <input class="answer" type="text" placeholder="숫자입력">
+                        <button type="submit">입력</button>
+                    </form>
+                    <div>
+                        <p class="chance" style="float: left;"></p>  
+                    </div>
+               </div>
+            </div>
+        </div>
+    </body>
+    <script>
+        
+        const answer = document.querySelector(".answer");
+        const rechanceNum = document.createElement('span');
+        const write = document.querySelector('.question_text');
+
+        let tryNum = 0;        
+        const numberList = [];
+        
+        function randomNum() { // 랜덤 숫자를 부여할때마다 사용하기에 변수에 담아주고 밑에서 변수선언만 해주면 코드가 짧아짐
+            const number = [0,1,2,3,4,5,6,7,8,9]; 
+        // splice = 배열의 기존 요소를 삭제 또는 교체하거나 새 요소를 추가하여 배열의 내용을 변경한다. 이때, 원본 배열은 바뀐다.(리턴값:제거한 요소를 담은 배열)
+        //Math.floor () = 주어진 수 중 가장 큰 정수를 반환 , floor()는 Math의 정적메소드로서 사용자가 생성한 Math객체의 메서드로 호출할수 없어 항상 Math.floor()로 사용해야함 Math는 생성자가 아니다.
+        //Math.random () = 난수(랜덤숫자)를 만든다. (0이상 1미만의 난수를 만듬) 
+        //splice = 배열 요소 삭제 함수
+            numberList.splice(0,3); //누적된 랜덤숫자를 지워주라 (0번째부터 3개를 제거)
+            for(var i=0; i<3; i++) { // 3개의 숫자를 랜덤으로 갖고온다.
+            //배열안에 난수(랜덤숫자)를 만들고 정수로 반환을 해서 반복문을 통해 9-i하여 첫번째 요소를 뽑고 
+                const randomNum = number.splice(Math.floor(Math.random() * (9 - i)), 1)[0]; //뒤에[0]을 쓰는 이유, [0]을 빼면 객체 자체가 하나씩 출력이 되고, 그 안에 첫번째가 숫자이기에 [0]을 작성한다.
+              
+                numberList.push(randomNum);
+                console.log(numberList);
+               
+            } 
+        }
+        randomNum();
+        
+        answer.maxLength = 3;  //최대 3개까지만
+        
+        let result = document.createElement('h1'); // 결과알려주는 text
+        $('.question').append(result);
+
+        
+        document.addEventListener('submit', function(event){  //form 이벤트 등록 
+            event.preventDefault(); //a태그, submit태그는 누르면 href를 통해 이동, 창이 리로딩하여 실행됨 이러한 동작을 preventDefault를 통해 막아줌 (이벤트를 취소할경우, 이벤트 전파를 막지않고 이벤트 취소)
+            const numValue = answer.value; //input에 작성한 값 
+            console.log(numValue)
+            let strike = 0; //스트라이크 변수선언 , 숫자와 자리가 맞으면 재할당이 필요하니 const를 사용하면 안됨
+            let ball = 0; //볼 변수선언 , 숫자만 맞으면 
+            let count = 0; // 반복횟수
+
+            
+            if(numValue ===""){ // 입력한 값이 없을 때
+                alert('숫자입력하세요')
+
+                return false;
+            }
+
+            //join메서드는 배열의 모든 요소를 연결해 하나의 문자열로 만듬. ex) number_list에 숫자가 console.log에 123 각각 나오면 join 메서드 통해서 123으로 묶여서 출력 
+            //join('') 하는 이유 - numValue는 123 , numberList 는 ["1","2","3"], numberList.join('') => 123                
+            if(numValue === numberList.join('')){  // 사용자가 작성한 숫자와 랜덤으로 나온 숫자가 일치 한다면 
+                //console.log(numValue)
+                //console.log(numberList)
+                write.remove();
+                result.textContent="축하합니다!!"
+                answer.value=''; //input값 초기화
+                answer.focus();
+                randomNum(); 
+                tryNum = 0;
+                
+
+            }else{ //맞지 않다면 
+                //split을 통해 input에 작성한 값(123)을 1,2,3 이렇게 한글자씩 떨어지게 한다. 
+                const answerList = numValue.split('');  
+                console.log(answerList) // input 작성한 값
+                   
+                tryNum +=1; // 1씩 증가함으로써 남은기회가 줄어들게함
+                
+                rechanceNum.textContent = "기회 : " + Number(5-tryNum); // 남은 기회
+                $('.chance').append(rechanceNum);    
+                
+
+                if(tryNum > 4){  //0,1,2,3,4 총 5번 틀리면 
+                    write.remove();
+                    result.textContent="실패하였습니다! 정답은"+numberList.join(',');
+                    answer.value=''; 
+                    answer.focus();
+                    randomNum(); 
+                    tryNum = 0; 
+                    
+
+                }else{ // 랜덤숫자 3개가 입력한 숫자와 스트라이크인지 볼인지 판단
+                    for(var j=0; j<3; j++) { // 3개의 숫자를 비교해야하니까 3번 돌고
+                        //== 변수값이 같다면 true, === 변수타입이 같다면 true  
+                        if(Number(answerList[j]) === numberList[j]) { //한번씩 돌때마다 입력한 "숫자"가 랜덤으로 나온 "숫자"와 같다면   
+                            strike +=1; 
+                        }
+                        //indexOf함수는 문자열에서 특정 문자열을 찾고,검색된 문자열의 위치도 알려준다. (문자열,배열 사용가능)
+                        //찾는 문자열이 없으면 -1을 리턴 
+                        else if(numberList.indexOf(Number(answerList[j]))-1){ // 랜덤숫자가 담긴 객체에서 찾고자하는 문자(숫자형태)를 찾는다. 작성한 객체에서 
+                            ball +=1;
+                        }
+                        result.textContent=strike+"Strike"+ball+'Ball';
+                        answer.value='';
+                        answer.focus();
+                    }
+                }  
+            }  
+        })
+        
+    </script>
+    </html>
+

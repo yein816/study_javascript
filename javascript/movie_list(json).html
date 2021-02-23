@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/json.css">
+</head>
+
+<body>
+    <h1>THE MOVIE</h1>
+    <div class="listInfo">
+       
+    </div>
+
+</body>
+<script src="../config.js"></script>
+<script>
+    const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w300';  //이미지 주소
+    const API_KEY = "d6991df45decb8b69479eb6f5d06becc" ;   //api 키 
+    const movie_url = "https://api.themoviedb.org/3/movie/now_playing?api_key=d6991df45decb8b69479eb6f5d06becc&language=ko-KR&page=1";
+    
+     function get_movieList() {
+        //  const config = {
+        //     method: "get"    //메소드 : 통신방식 ,get : 정보를 서버에 가져올 때 이용   , post : 정보를 서버에 보낼 때 이용
+        //     };
+      
+        fetch(movie_url)  //연결할 api 주소 넣고 , fetch는 데이터를 서버에게 요청하는 함수, ajex를 하기위해 쓰는 함수
+        .then(res => {   // then 콜백함수 , API를 이용하여 백엔드 서버로부터 받아온 정보를 사용할 때 .then()함수를 이용
+            // response 처리
+           
+            console.log(res);
+            // 응답을 JSON 형태로 파싱
+            return res.json();
+             
+        })
+        .then(json => {
+            // json 출력
+            const data_list = json.results
+            console.log(data_list)
+           
+            for(var i=0; i< data_list.length; i++)
+            {
+                $('.listInfo').append("<div><img src="+IMAGE_BASE_URL + data_list[i].poster_path+"><p>"+data_list[i].title+"</p></div>");
+                // $('.listInfo').append("<p>"+data_list[i].original_title+"</p>");
+            }
+        //    $('.listInfo').append("<div>"+data_list+"</div>");
+        //    $('.listInfo').append("<img src='"+IMAGE_BASE_URL+'/>");
+        })
+        .catch(err => {    //콜백함수
+            // error 처리
+            console.log('Fetch Error', err);
+        });
+        
+    }
+    get_movieList();
+    // $.ajax({
+    //     type :"GET",
+    //     url: "https://api.themoviedb.org/3/movie/now_playing?api_key=d6991df45decb8b69479eb6f5d06becc&language=en-US&page=1",
+    //     // data : {api_key :"d6991df45decb8b69479eb6f5d06becc "},
+    //     // dataType : "json",
+    //     context: document.layout
+    //   }).done(function (json) {
+    //     $("<h1>").text(json.title).appendTo("body");
+    //     $("<div class=\"content\">").html(json.html).appendTo("body");
+    //       $(this).addClass("done");
+    //   });
+      
+    //$.ajax({
+    //method: "GET",
+     //url: "config.js",
+    //dataType: "script"
+    //});
+   
+    
+</script>
+
+</html>

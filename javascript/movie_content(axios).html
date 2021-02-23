@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="/css/ax_info.css">
+
+        <title>The movie contents</title>
+    </head>
+
+    <body>
+        <div class="bg_img"></div>
+        <div class="info_box"></div>
+    </body>
+    <script>
+        const API_KEY = "d6991df45decb8b69479eb6f5d06becc";  // 무비 api 키
+        const movieID = location.href.split("movie_id=")[1];  
+        // 현재 주소 ex)http://127.0.0.1:5501/html/axios_info.html? (옆에 부분을 location.href) split는 (movie_id= 를 기준) 앞 뒤로 잘라주는 것  , 458576  id 값 (각 무비상세내용 할당된 아이디)
+        //[1]의 의미 location.href 쪽에 1번 
+        
+        const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w400';   // 무비 상영작 이미지 주소 
+        const IMAGE_BACKGROUND = 'https://image.tmdb.org/t/p/original';  //백그라운드 이미지를 위해 원본사이즈로 담은 주소
+        const movie_url = `https://api.themoviedb.org/3/movie/${movieID}?api_key=${API_KEY}&language=ko-KR`;  // 영화 상세내용의 주소  
+        
+        axios.get(movie_url)
+
+        .then(function (res) {
+            console.log(res)
+            const movie_data = res.data  // 영화 내용의 모든 데이터
+            console.log(movie_data)  
+
+           
+            $('.info_box').append("<div><img src="+IMAGE_BACKGROUND + movie_data.backdrop_path +"><<div><img src="+IMAGE_BASE_URL + movie_data.poster_path +"><h3>"+movie_data.title +"</h3><p>"+movie_data.overview +"</p> </div></div>");
+            //  이미지 담은 주소 + 모든 데이터 중 포스터 이미지와 영화 내용을 내가 정한 div 아래에 포함을 시키겠다.
+                  
+        })
+    // 응답(실패)
+    .catch(function (error) {
+        console.log(error);
+    })
+    // 응답(항상 실행)
+    .then(function () {
+        // ...
+    });
+    </script>
+</html>
