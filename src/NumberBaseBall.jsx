@@ -105,7 +105,6 @@ class NumBaseball extends Component {
         console.log(e.target.value)  // target을 작성해 주지 않으면 내가 작성한 (변화한 값)을 받아오지 않고 undefined이 뜬다
     };
 
-    //기회 숫자 증가
 
     //리엑트 반복문(map) - 리엑트 에서는 반복문을 map()함수을 사용한다, 달라지는 부분을 배열로 만들어 받아오고 공통되는 부분은 return 
     render() {
