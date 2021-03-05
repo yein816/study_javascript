@@ -6,17 +6,10 @@ import TodoCreate from './todoComponents/TodoCreate';  // input, 입력버튼
 import TodoHead from './todoComponents/TodoHead'; // 날짜, 할일 갯수 
 import TodoList from './todoComponents/TodoList'; // 각 리스트에 보여지는 것을 넣기
 import { TodoProvider } from './todoComponents/TodoContext';
-import TodoUpdate from './todoComponents/TodoUpdate';
-import TodoItem from './todoComponents/TodoItem';
 
 //todolist 
 const App = () => {
 
-  // const onRemove = useCallback(
-  //   (id) => {
-  //     setTodos
-  //   }
-  // )
   return (
     <TodoProvider>
     <TodoTemplate>
