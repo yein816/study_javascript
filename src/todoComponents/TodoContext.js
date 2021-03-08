@@ -5,17 +5,6 @@ const TodoDispatchContext = createContext();
 const TodoNextIdContext = createContext();
 
 
-// useReducer 쓰는 이유
-// 이전에 만들었던 주요 상태 업데이트 로직은 App 컴포넌트 내부에서 이루어 졌다. 
-// 상태를 업데이트 할 때는 useState를 사용해서 새로운 상태를 설정해줬는데, 상태를 관리하게 될때 이것 말고 다른 방법도 있다.
-// useReducer(Hook 함수)를 사용하면 컴포넌트의 상태 업데이트 로직을 컴포넌트에서 분리 시킬 수 있다.
-// 상태 업데이트 로직을 컴포넌트 바깥에 작성할수도 있고, 다른파일에 작성후 불러올수도 있다
-
-// useReducer 란
-// 현재상태와 액션 객체를 파라미터로 받아와서 새로운 상태를 반환해주는 함수
-// reducer에서 반환하는 상태는 곧 컴포넌트가 지닐 새로운 상태이다
-// action - 업데이트를 위한 정보를 가지고 있다. 주로 type 값을 지닌 객체 형태로 사용하지만, 꼭 따라야 할 규칙은 없다. (형태 자유)
-
 function todoReducer(state, action) {  //현재상태와 액션 객체를 받아온다!
   switch (action.type) {
     case 'CREATE':
@@ -78,3 +67,15 @@ export function useTodoDispatch() {
 export function useTodoNextId() {
   return useContext(TodoNextIdContext);
 }
+
+
+// useReducer 쓰는 이유
+// 이전에 만들었던 주요 상태 업데이트 로직은 App 컴포넌트 내부에서 이루어 졌다. 
+// 상태를 업데이트 할 때는 useState를 사용해서 새로운 상태를 설정해줬는데, 상태를 관리하게 될때 이것 말고 다른 방법도 있다.
+// useReducer(Hook 함수)를 사용하면 컴포넌트의 상태 업데이트 로직을 컴포넌트에서 분리 시킬 수 있다.
+// 상태 업데이트 로직을 컴포넌트 바깥에 작성할수도 있고, 다른파일에 작성후 불러올수도 있다
+
+// useReducer 란
+// 현재상태와 액션 객체를 파라미터로 받아와서 새로운 상태를 반환해주는 함수
+// reducer에서 반환하는 상태는 곧 컴포넌트가 지닐 새로운 상태이다
+// action - 업데이트를 위한 정보를 가지고 있다. 주로 type 값을 지닌 객체 형태로 사용하지만, 꼭 따라야 할 규칙은 없다. (형태 자유)

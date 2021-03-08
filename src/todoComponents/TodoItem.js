@@ -2,8 +2,6 @@ import React, { useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { MdDone, MdDelete,MdBorderColor,MdCheck, MdCancel } from 'react-icons/md';
 import { useTodoDispatch } from './TodoContext';
-import TodoUpdate from './TodoUpdate';
-import TodoCreate from './TodoCreate';
 
 
 const Remove = styled.div  //삭제 아이콘 
@@ -181,7 +179,6 @@ function TodoItem({ id, done ,text}) {  // id로 추가,수정,삭제 done : tru
       
       //console.log(e.target)		//이벤트가 발생한 타겟의 요소를 출력
       console.log(e.target.value)	//이벤트가 발생한 타겟의 Value를 출력
-      //setValue(e.target.value)		//이벤트 발생한 value값으로 {text} 변경
     }
 
    

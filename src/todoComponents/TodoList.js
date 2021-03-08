@@ -28,10 +28,8 @@ function TodoList() {
         <TodoItem
           id={todo.id}
           text={todo.text}
-          done={todo.done}  //할일을 완료했는지 안했는지 
+          done={todo.done}
           key={todo.id}
-          //inputRef={todo.text}
-          //toggle={todo.toggle}
         />
       ))}
     </TodoListBlock>
